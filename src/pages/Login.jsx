@@ -1,12 +1,9 @@
 import db from '@/api/db';
 
 import React, { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
+import GoogleIcon from "@/components/GoogleIcon";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -29,50 +26,78 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">BI</span>
+    <div className="min-h-screen bg-paper flex flex-col">
+      <header className="flex items-center justify-between border-b-2 border-ink px-5 py-3">
+        <div className="flex items-center gap-2.5">
+          <div className="grid h-8 w-8 place-items-center bg-acid">
+            <span className="font-mono text-sm font-bold text-night">BI</span>
           </div>
-          <h1 className="text-2xl font-heading font-bold text-slate-900">Welcome back</h1>
-          <p className="text-sm text-slate-500 mt-1">Sign in to Bet It</p>
+          <span className="font-display text-lg font-black uppercase tracking-tight">Bet It</span>
         </div>
+        <span className="eyebrow hidden sm:block">// house money · real stakes</span>
+      </header>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">{error}</p>}
-          <div>
-            <Label>Email</Label>
-            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} className="mt-1.5 rounded-xl" required />
+      <main className="grid flex-1 place-items-center px-5 py-10">
+        <div className="w-full max-w-sm">
+          <p className="eyebrow mb-3">// sign in</p>
+          <h1 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight">
+            welcome<br />
+            <span className="mark">back.</span>
+          </h1>
+
+          <form onSubmit={handleLogin} className="mt-9 space-y-5">
+            {error && (
+              <p className="border-2 border-flag bg-flag/10 px-3 py-2 font-mono text-xs text-flag">{error}</p>
+            )}
+            <div>
+              <label className="eyebrow">// email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="inp mt-1.5"
+                placeholder="you@email.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="eyebrow">// password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="inp mt-1.5"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <button type="submit" disabled={loading} className="btn btn-ink w-full">
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+              Sign In
+            </button>
+          </form>
+
+          <div className="my-6 flex items-center gap-3">
+            <div className="h-0.5 flex-1 bg-ink/15" />
+            <span className="eyebrow">// or</span>
+            <div className="h-0.5 flex-1 bg-ink/15" />
           </div>
-          <div>
-            <Label>Password</Label>
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} className="mt-1.5 rounded-xl" required />
+
+          <button onClick={() => db.auth.loginWithProvider("google", "/")} className="btn btn-line w-full">
+            <GoogleIcon className="h-4 w-4" />
+            Continue with Google
+          </button>
+
+          <div className="mt-8 flex items-center justify-between font-mono text-xs text-ink/60">
+            <Link to="/forgot-password" className="underline decoration-2 underline-offset-4 hover:text-ink">
+              Forgot password?
+            </Link>
+            <Link to="/register" className="text-ink hover:text-acid-deep">
+              No account? <span className="font-bold">Sign up →</span>
+            </Link>
           </div>
-          <Button type="submit" disabled={loading} className="w-full bg-violet-600 hover:bg-violet-700 rounded-xl h-11">
-            {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null} Sign In
-          </Button>
-        </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-          <div className="relative flex justify-center text-xs"><span className="bg-white px-3 text-slate-400">or</span></div>
         </div>
-
-        <Button
-          variant="outline"
-          className="w-full rounded-xl h-11"
-          onClick={() => db.auth.loginWithProvider("google", "/")}
-        >
-          <img src="https://www.google.com/favicon.ico" className="w-4 h-4 mr-2" alt="" />
-          Continue with Google
-        </Button>
-
-        <div className="text-center text-sm text-slate-500 space-y-1">
-          <Link to="/forgot-password" className="text-violet-600 hover:underline block">Forgot password?</Link>
-          <p>Don't have an account? <Link to="/register" className="text-violet-600 hover:underline">Sign up</Link></p>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

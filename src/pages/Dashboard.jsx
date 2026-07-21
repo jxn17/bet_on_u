@@ -1,11 +1,8 @@
 import db from '@/api/db';
 
 import React, { useState, useEffect } from "react";
-
 import { Link } from "react-router-dom";
-import { Plus, Users, ArrowRight, DoorOpen, Loader2, Coins, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Plus, DoorOpen, ArrowRight, Loader2, Coins } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -20,22 +17,15 @@ export default function Dashboard() {
   const [joinOpen, setJoinOpen] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     try {
       const currentUser = await db.auth.me();
       setUser(currentUser);
       setWallet(await db.wallet.get());
-
-      // RLS scopes these to rooms the user belongs to.
-      const myRooms = await db.entities.Room.list();
-      setRooms(myRooms);
-
-      const allGoals = await db.entities.Goal.filter({ user_id: currentUser.id });
-      setGoals(allGoals);
+      setRooms(await db.entities.Room.list());
+      setGoals(await db.entities.Goal.filter({ user_id: currentUser.id }));
     } catch (e) {
       console.error(e);
     } finally {
@@ -48,23 +38,24 @@ export default function Dashboard() {
     setJoining(true);
     try {
       const room = await db.rooms.join(joinCode.trim().toUpperCase());
-      toast({ title: "Joined!", description: `You're now in "${room.name}"` });
+      toast({ title: "You're in", description: `Joined "${room.name}"` });
       setJoinCode("");
       setJoinOpen(false);
       loadData();
     } catch (e) {
-      toast({ title: "Couldn't join room", description: e.message, variant: "destructive" });
+      toast({ title: "Couldn't join", description: e.message, variant: "destructive" });
     } finally {
       setJoining(false);
     }
   };
 
   const activeGoals = goals.filter(g => g.status === "active").length;
+  const firstName = user?.full_name?.split(" ")[0] || "player";
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+      <div className="grid min-h-[60vh] place-items-center">
+        <Loader2 className="h-6 w-6 animate-spin text-ink" />
       </div>
     );
   }
@@ -73,65 +64,57 @@ export default function Dashboard() {
     <div className="space-y-8">
       {/* Hero */}
       <div>
-        <h1 className="text-3xl font-heading font-bold text-slate-900 dark:text-white tracking-tight">
-          Hey, {user?.full_name?.split(" ")[0] || "there"} 👋
+        <p className="eyebrow">// {firstName}'s table</p>
+        <h1 className="mt-2 font-display text-4xl font-black uppercase leading-[0.9] tracking-tight sm:text-5xl">
+          coins where your<br /><span className="mark">goals</span> are.
         </h1>
-        <p className="text-slate-500 mt-1">Put your coins where your goals are.</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-4">
-          <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400 uppercase tracking-wider">
-            <Coins className="w-3.5 h-3.5 text-amber-500" /> Wallet
+      {/* Wallet + stats */}
+      <div className="space-y-3">
+        <div className="flex items-end justify-between border-2 border-ink bg-acid p-5 text-night shadow-hard">
+          <div>
+            <p className="eyebrow text-night/70">// wallet balance</p>
+            <p className="mt-1 font-display text-5xl font-black leading-none">{wallet.balance}</p>
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{wallet.balance}</div>
+          <Coins className="h-9 w-9" />
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-4">
-          <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400 uppercase tracking-wider">
-            <Lock className="w-3.5 h-3.5 text-violet-500" /> In Play
+        <div className="grid grid-cols-2 gap-3">
+          <div className="tile">
+            <p className="eyebrow">// in play</p>
+            <p className="mt-1 font-display text-3xl font-black">{wallet.locked}</p>
           </div>
-          <div className="text-2xl font-bold text-violet-600 mt-1">{wallet.locked}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-4">
-          <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active</div>
-          <div className="text-2xl font-bold text-emerald-600 mt-1">{activeGoals}</div>
+          <div className="tile">
+            <p className="eyebrow">// active goals</p>
+            <p className="mt-1 font-display text-3xl font-black">{activeGoals}</p>
+          </div>
         </div>
       </div>
 
-      {/* Quick actions */}
-      <div className="flex gap-3">
-        <Link to="/create-room" className="flex-1">
-          <Button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl h-12 font-medium">
-            <Plus className="w-4 h-4 mr-2" /> Create Room
-          </Button>
+      {/* Actions */}
+      <div className="grid grid-cols-2 gap-3">
+        <Link to="/create-room" className="btn btn-ink">
+          <Plus className="h-4 w-4" /> Create Room
         </Link>
         <Dialog open={joinOpen} onOpenChange={setJoinOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="flex-1 rounded-xl h-12 font-medium border-slate-200">
-              <DoorOpen className="w-4 h-4 mr-2" /> Join Room
-            </Button>
+            <button className="btn btn-line"><DoorOpen className="h-4 w-4" /> Join Room</button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="border-2 border-ink bg-paper">
             <DialogHeader>
-              <DialogTitle>Join a Room</DialogTitle>
+              <DialogTitle className="font-display text-2xl font-black uppercase tracking-tight">Join a room</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 pt-2">
-              <Input
-                placeholder="Enter invite code"
+            <div className="space-y-4 pt-1">
+              <input
+                placeholder="INVITE CODE"
                 value={joinCode}
                 onChange={e => setJoinCode(e.target.value.toUpperCase())}
-                className="text-center text-lg tracking-[0.3em] font-mono uppercase"
+                className="inp h-14 text-center text-xl font-bold tracking-[0.4em]"
                 maxLength={8}
               />
-              <Button
-                onClick={handleJoinRoom}
-                disabled={joining || !joinCode.trim()}
-                className="w-full bg-violet-600 hover:bg-violet-700 rounded-xl"
-              >
-                {joining ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Join Room
-              </Button>
+              <button onClick={handleJoinRoom} disabled={joining || !joinCode.trim()} className="btn btn-ink w-full">
+                {joining ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Join Room
+              </button>
             </div>
           </DialogContent>
         </Dialog>
@@ -139,32 +122,31 @@ export default function Dashboard() {
 
       {/* Rooms */}
       <div>
-        <h2 className="text-lg font-heading font-semibold text-slate-900 dark:text-white mb-3">Your Rooms</h2>
+        <p className="eyebrow mb-3">// your rooms [{rooms.length}]</p>
         {rooms.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-8 text-center">
-            <Users className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 text-sm">No rooms yet. Create one or join with a code!</p>
+          <div className="border-2 border-dashed border-ink/40 p-8 text-center">
+            <p className="font-mono text-sm text-ink/60">No rooms yet.<br />Create one or join with a code.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {rooms.map(room => (
-              <Link key={room.id} to={`/room/${room.id}`}>
-                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-4 hover:border-violet-200 hover:shadow-sm transition-all group">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-slate-900 dark:text-white">{room.name}</h3>
-                      <p className="text-sm text-slate-400 mt-0.5">
-                        Season {room.round} · {room.jackpot || 0} 🪙 jackpot
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                        room.status === "active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-500"
-                      }`}>
-                        {room.status}
-                      </span>
-                      <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet-500 transition-colors" />
-                    </div>
+              <Link
+                key={room.id}
+                to={`/room/${room.id}`}
+                className="block border-2 border-ink bg-card p-4 transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-hard"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="truncate font-display text-xl font-black uppercase tracking-tight">{room.name}</h3>
+                    <p className="mt-0.5 font-mono text-xs text-ink/60">
+                      season {room.round} · {room.jackpot || 0} 🪙 pot
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <span className={`stamp ${room.status === "active" ? "border-ink text-ink" : "border-ink/40 text-ink/40"}`}>
+                      {room.status}
+                    </span>
+                    <ArrowRight className="h-5 w-5" />
                   </div>
                 </div>
               </Link>
