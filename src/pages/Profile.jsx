@@ -1,13 +1,13 @@
 import db from '@/api/db';
 
 import React, { useState, useEffect } from "react";
-
-import { Loader2, Trophy, Target, TrendingDown, Coins } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [goals, setGoals] = useState([]);
   const [payouts, setPayouts] = useState([]);
+  const [wallet, setWallet] = useState({ balance: 0, locked: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,10 +15,9 @@ export default function Profile() {
       try {
         const u = await db.auth.me();
         setUser(u);
-        const g = await db.entities.Goal.filter({ user_id: u.id });
-        setGoals(g);
-        const p = await db.entities.Payout.filter({ to_user_id: u.id });
-        setPayouts(p);
+        setWallet(await db.wallet.get());
+        setGoals(await db.entities.Goal.filter({ user_id: u.id }));
+        setPayouts(await db.entities.Payout.filter({ to_user_id: u.id }));
       } catch (e) {
         console.error(e);
       } finally {
@@ -29,8 +28,8 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+      <div className="grid min-h-[60vh] place-items-center">
+        <Loader2 className="h-6 w-6 animate-spin text-ink" />
       </div>
     );
   }
@@ -42,46 +41,56 @@ export default function Profile() {
   const netPL = totalEarned - lostAmount;
 
   const stats = [
-    { label: "Goals Set", value: goals.length, icon: Target, color: "text-violet-600 bg-violet-50" },
-    { label: "Succeeded", value: succeeded, icon: Trophy, color: "text-emerald-600 bg-emerald-50" },
-    { label: "Failed", value: failed, icon: TrendingDown, color: "text-red-600 bg-red-50" },
-    { label: "Net P/L", value: `${netPL >= 0 ? "+" : ""}${netPL} 🪙`, icon: Coins, color: netPL >= 0 ? "text-emerald-600 bg-emerald-50" : "text-red-600 bg-red-50" },
+    { label: "goals set", value: goals.length },
+    { label: "succeeded", value: succeeded },
+    { label: "failed", value: failed },
+    { label: "net p/l 🪙", value: `${netPL >= 0 ? "+" : ""}${netPL}` },
   ];
 
   return (
-    <div className="space-y-6 max-w-md mx-auto">
-      <div className="text-center pt-4">
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center mx-auto mb-3">
-          <span className="text-white text-2xl font-bold">
-            {(user?.full_name || user?.email || "?")[0].toUpperCase()}
-          </span>
+    <div className="space-y-8">
+      {/* Identity */}
+      <div className="flex items-center gap-4">
+        <div className="grid h-16 w-16 place-items-center border-2 border-ink bg-acid">
+          <span className="font-display text-2xl font-black text-night">{(user?.full_name || user?.email || "?")[0].toUpperCase()}</span>
         </div>
-        <h1 className="text-xl font-heading font-bold text-slate-900">{user?.full_name || "User"}</h1>
-        <p className="text-sm text-slate-400">{user?.email}</p>
+        <div className="min-w-0">
+          <p className="eyebrow">// player</p>
+          <h1 className="truncate font-display text-2xl font-black uppercase tracking-tight">{user?.full_name || "Player"}</h1>
+          <p className="truncate font-mono text-xs text-ink/55">{user?.email}</p>
+        </div>
       </div>
 
+      {/* Wallet block */}
+      <div className="flex items-end justify-between border-2 border-ink bg-night p-5 text-cream shadow-hard">
+        <div>
+          <p className="eyebrow text-acid">// wallet</p>
+          <p className="mt-1 font-display text-5xl font-black leading-none">{wallet.balance}</p>
+        </div>
+        <p className="font-mono text-xs text-cream/60">{wallet.locked} in play</p>
+      </div>
+
+      {/* Stats */}
       <div className="grid grid-cols-2 gap-3">
-        {stats.map((s, i) => (
-          <div key={i} className="bg-white rounded-2xl border border-slate-100 p-4">
-            <div className={`w-8 h-8 rounded-lg ${s.color} flex items-center justify-center mb-2`}>
-              <s.icon className="w-4 h-4" />
-            </div>
-            <p className="text-2xl font-bold text-slate-900">{s.value}</p>
-            <p className="text-xs text-slate-400">{s.label}</p>
+        {stats.map(s => (
+          <div key={s.label} className="tile">
+            <p className="eyebrow">// {s.label}</p>
+            <p className="mt-1 font-display text-3xl font-black">{s.value}</p>
           </div>
         ))}
       </div>
 
+      {/* Earnings */}
       <div>
-        <h2 className="text-lg font-heading font-semibold text-slate-900 mb-3">Recent Earnings</h2>
+        <p className="eyebrow mb-3">// recent earnings</p>
         {payouts.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-4">No earnings yet.</p>
+          <div className="border-2 border-dashed border-ink/40 py-6 text-center font-mono text-sm text-ink/50">No earnings yet.</div>
         ) : (
           <div className="space-y-2">
             {payouts.slice(0, 10).map(p => (
-              <div key={p.id} className="bg-white rounded-xl border border-slate-100 p-3 flex items-center justify-between">
-                <p className="text-sm text-slate-600">{p.reason}</p>
-                <span className="text-sm font-bold text-emerald-600">+{p.amount} 🪙</span>
+              <div key={p.id} className="flex items-center justify-between border-2 border-ink bg-card p-3">
+                <p className="font-mono text-xs text-ink/70">{p.reason}</p>
+                <span className="font-mono text-sm font-bold">+{p.amount} 🪙</span>
               </div>
             ))}
           </div>

@@ -1,13 +1,10 @@
 import db from '@/api/db';
 
 import React, { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import GoogleIcon from "@/components/GoogleIcon";
 
 export default function Register() {
   const [step, setStep] = useState("register");
@@ -25,7 +22,6 @@ export default function Register() {
     setError("");
     try {
       const data = await db.auth.register({ email, password });
-      // If the project auto-confirms emails, sign-up returns a session already.
       if (data?.session) {
         window.location.href = "/";
         return;
@@ -53,70 +49,96 @@ export default function Register() {
   };
 
   const handleResend = async () => {
-    try {
-      await db.auth.resendOtp(email);
-    } catch (e) {}
+    try { await db.auth.resendOtp(email); } catch (e) { /* ignore */ }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">BI</span>
+    <div className="min-h-screen bg-paper flex flex-col">
+      <header className="flex items-center justify-between border-b-2 border-ink px-5 py-3">
+        <div className="flex items-center gap-2.5">
+          <div className="grid h-8 w-8 place-items-center bg-acid">
+            <span className="font-mono text-sm font-bold text-night">BI</span>
           </div>
-          <h1 className="text-2xl font-heading font-bold text-slate-900">
-            {step === "register" ? "Create account" : "Verify email"}
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            {step === "register" ? "Join Bet It" : `We sent a code to ${email}`}
-          </p>
+          <span className="font-display text-lg font-black uppercase tracking-tight">Bet It</span>
         </div>
+        <span className="eyebrow hidden sm:block">// 1000 free coins</span>
+      </header>
 
-        {step === "register" ? (
-          <form onSubmit={handleRegister} className="space-y-4">
-            {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">{error}</p>}
-            <div>
-              <Label>Email</Label>
-              <Input type="email" value={email} onChange={e => setEmail(e.target.value)} className="mt-1.5 rounded-xl" required />
-            </div>
-            <div>
-              <Label>Password</Label>
-              <Input type="password" value={password} onChange={e => setPassword(e.target.value)} className="mt-1.5 rounded-xl" required />
-            </div>
-            <div>
-              <Label>Confirm Password</Label>
-              <Input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="mt-1.5 rounded-xl" required />
-            </div>
-            <Button type="submit" disabled={loading} className="w-full bg-violet-600 hover:bg-violet-700 rounded-xl h-11">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null} Sign Up
-            </Button>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-              <div className="relative flex justify-center text-xs"><span className="bg-white px-3 text-slate-400">or</span></div>
-            </div>
-            <Button variant="outline" className="w-full rounded-xl h-11" type="button" onClick={() => db.auth.loginWithProvider("google", "/")}>
-              <img src="https://www.google.com/favicon.ico" className="w-4 h-4 mr-2" alt="" /> Continue with Google
-            </Button>
-            <p className="text-center text-sm text-slate-500">Already have an account? <Link to="/login" className="text-violet-600 hover:underline">Sign in</Link></p>
-          </form>
-        ) : (
-          <div className="space-y-4">
-            {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">{error}</p>}
-            <div className="flex justify-center">
-              <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                <InputOTPGroup>
-                  {[0,1,2,3,4,5].map(i => <InputOTPSlot key={i} index={i} />)}
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-            <Button onClick={handleVerify} disabled={loading || otp.length < 6} className="w-full bg-violet-600 hover:bg-violet-700 rounded-xl h-11">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null} Verify
-            </Button>
-            <button onClick={handleResend} className="text-sm text-violet-600 hover:underline w-full text-center">Resend code</button>
-          </div>
-        )}
-      </div>
+      <main className="grid flex-1 place-items-center px-5 py-10">
+        <div className="w-full max-w-sm">
+          {step === "register" ? (
+            <>
+              <p className="eyebrow mb-3">// new player</p>
+              <h1 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight">
+                get in the <span className="mark">game.</span>
+              </h1>
+
+              <form onSubmit={handleRegister} className="mt-9 space-y-5">
+                {error && (
+                  <p className="border-2 border-flag bg-flag/10 px-3 py-2 font-mono text-xs text-flag">{error}</p>
+                )}
+                <div>
+                  <label className="eyebrow">// email</label>
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="inp mt-1.5" placeholder="you@email.com" required />
+                </div>
+                <div>
+                  <label className="eyebrow">// password</label>
+                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="inp mt-1.5" placeholder="••••••••" required />
+                </div>
+                <div>
+                  <label className="eyebrow">// confirm password</label>
+                  <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="inp mt-1.5" placeholder="••••••••" required />
+                </div>
+                <button type="submit" disabled={loading} className="btn btn-ink w-full">
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+                  Create Account
+                </button>
+              </form>
+
+              <div className="my-6 flex items-center gap-3">
+                <div className="h-0.5 flex-1 bg-ink/15" />
+                <span className="eyebrow">// or</span>
+                <div className="h-0.5 flex-1 bg-ink/15" />
+              </div>
+
+              <button type="button" onClick={() => db.auth.loginWithProvider("google", "/")} className="btn btn-line w-full">
+                <GoogleIcon className="h-4 w-4" /> Continue with Google
+              </button>
+
+              <p className="mt-8 text-center font-mono text-xs text-ink/60">
+                Already playing? <Link to="/login" className="font-bold text-ink hover:text-acid-deep">Sign in →</Link>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="eyebrow mb-3">// verify · code sent to {email}</p>
+              <h1 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight">
+                check your <span className="mark">inbox.</span>
+              </h1>
+
+              <div className="mt-9 space-y-5">
+                {error && (
+                  <p className="border-2 border-flag bg-flag/10 px-3 py-2 font-mono text-xs text-flag">{error}</p>
+                )}
+                <div className="flex justify-center">
+                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                    <InputOTPGroup>
+                      {[0,1,2,3,4,5].map(i => <InputOTPSlot key={i} index={i} className="h-12 w-11 border-2 border-ink font-mono text-lg" />)}
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+                <button onClick={handleVerify} disabled={loading || otp.length < 6} className="btn btn-ink w-full">
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+                  Verify
+                </button>
+                <button onClick={handleResend} className="w-full text-center font-mono text-xs text-ink/60 underline decoration-2 underline-offset-4 hover:text-ink">
+                  Resend code
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

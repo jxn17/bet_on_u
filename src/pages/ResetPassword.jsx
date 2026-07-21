@@ -1,11 +1,7 @@
 import db from '@/api/db';
 
 import React, { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -31,27 +27,42 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-heading font-bold text-slate-900">New Password</h1>
-          <p className="text-sm text-slate-500 mt-1">Choose a new password</p>
+    <div className="min-h-screen bg-paper flex flex-col">
+      <header className="flex items-center justify-between border-b-2 border-ink px-5 py-3">
+        <div className="flex items-center gap-2.5">
+          <div className="grid h-8 w-8 place-items-center bg-acid">
+            <span className="font-mono text-sm font-bold text-night">BI</span>
+          </div>
+          <span className="font-display text-lg font-black uppercase tracking-tight">Bet It</span>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">{error}</p>}
-          <div>
-            <Label>New Password</Label>
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} className="mt-1.5 rounded-xl" required />
-          </div>
-          <div>
-            <Label>Confirm Password</Label>
-            <Input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="mt-1.5 rounded-xl" required />
-          </div>
-          <Button type="submit" disabled={loading} className="w-full bg-violet-600 hover:bg-violet-700 rounded-xl h-11">
-            {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null} Reset Password
-          </Button>
-        </form>
-      </div>
+      </header>
+
+      <main className="grid flex-1 place-items-center px-5 py-10">
+        <div className="w-full max-w-sm">
+          <p className="eyebrow mb-3">// new password</p>
+          <h1 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight">
+            pick a new <span className="mark">one.</span>
+          </h1>
+
+          <form onSubmit={handleSubmit} className="mt-9 space-y-5">
+            {error && (
+              <p className="border-2 border-flag bg-flag/10 px-3 py-2 font-mono text-xs text-flag">{error}</p>
+            )}
+            <div>
+              <label className="eyebrow">// new password</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="inp mt-1.5" placeholder="••••••••" required />
+            </div>
+            <div>
+              <label className="eyebrow">// confirm password</label>
+              <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="inp mt-1.5" placeholder="••••••••" required />
+            </div>
+            <button type="submit" disabled={loading} className="btn btn-ink w-full">
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+              Reset password
+            </button>
+          </form>
+        </div>
+      </main>
     </div>
   );
 }

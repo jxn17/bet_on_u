@@ -10,6 +10,16 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+  			// theme-swappable: invert between light and dark via CSS vars
+  			ink: 'rgb(var(--ink-rgb) / <alpha-value>)',
+  			paper: 'rgb(var(--paper-rgb) / <alpha-value>)',
+  			'paper-2': 'rgb(var(--paper2-rgb) / <alpha-value>)',
+  			// fixed regardless of theme
+  			night: '#0E0E0C',
+  			cream: '#EFEBDD',
+  			acid: '#CCFF00',
+  			'acid-deep': '#AEE000',
+  			flag: '#FF4A1C',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -66,6 +76,12 @@ module.exports = {
   			body: ['var(--font-body)'],
   			display: ['var(--font-display)'],
   			mono: ['var(--font-mono)']
+  		},
+  		boxShadow: {
+  			hard: '5px 5px 0 0 rgb(var(--ink-rgb))',
+  			'hard-sm': '3px 3px 0 0 rgb(var(--ink-rgb))',
+  			'hard-acid': '5px 5px 0 0 #CCFF00',
+  			'hard-flag': '5px 5px 0 0 #FF4A1C'
   		},
   		keyframes: {
   			'accordion-down': {

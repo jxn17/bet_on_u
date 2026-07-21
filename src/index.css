@@ -4,87 +4,152 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --font-heading: ui-sans-serif, system-ui, sans-serif;
-    --font-body: ui-sans-serif, system-ui, sans-serif;
-    --font-display: ui-sans-serif, system-ui, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Bet It — brutalist-editorial-neon
+       Theme-swappable: ink/paper invert in dark mode; acid + flag are fixed.
+       light: ink #0E0E0C on paper #EFEBDD */
+    --ink-rgb: 14 14 12;
+    --paper-rgb: 239 235 221;
+    --paper2-rgb: 228 222 204;
+
+    --background: 45 30% 90%;
+    --foreground: 60 8% 5%;
+    --card: 45 34% 93%;
+    --card-foreground: 60 8% 5%;
+    --popover: 45 34% 94%;
+    --popover-foreground: 60 8% 5%;
+    --primary: 60 8% 5%;
+    --primary-foreground: 45 30% 92%;
+    --secondary: 44 20% 85%;
+    --secondary-foreground: 60 8% 5%;
+    --muted: 44 18% 85%;
+    --muted-foreground: 60 5% 34%;
+    --accent: 72 100% 50%;
+    --accent-foreground: 60 8% 5%;
+    --destructive: 12 100% 55%;
+    --destructive-foreground: 45 34% 96%;
+    --border: 50 12% 74%;
+    --input: 50 12% 70%;
+    --ring: 72 100% 45%;
+    --radius: 0.125rem;
+    --font-heading: 'Archivo', system-ui, sans-serif;
+    --font-body: 'Archivo', system-ui, sans-serif;
+    --font-display: 'Archivo', system-ui, sans-serif;
+    --font-mono: 'Space Mono', ui-monospace, monospace;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* dark: cream ink #EFEBDD on near-black paper #121210 */
+    --ink-rgb: 239 235 221;
+    --paper-rgb: 18 18 16;
+    --paper2-rgb: 30 30 26;
+
+    --background: 45 6% 7%;
+    --foreground: 45 30% 90%;
+    --card: 45 6% 10%;
+    --card-foreground: 45 30% 90%;
+    --popover: 45 6% 9%;
+    --popover-foreground: 45 30% 90%;
+    --primary: 45 30% 90%;
+    --primary-foreground: 60 8% 5%;
+    --secondary: 45 6% 15%;
+    --secondary-foreground: 45 30% 90%;
+    --muted: 45 6% 15%;
+    --muted-foreground: 45 12% 62%;
+    --accent: 72 100% 50%;
+    --accent-foreground: 60 8% 5%;
+    --destructive: 12 100% 55%;
+    --destructive-foreground: 45 34% 96%;
+    --border: 45 6% 26%;
+    --input: 45 6% 30%;
+    --ring: 72 100% 45%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-paper text-ink font-body antialiased;
   }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  ::selection {
+    background: #ccff00;
+    color: #0e0e0c;
+  }
+
+  :focus-visible {
+    outline: 2px solid #ccff00;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Monospace eyebrow label, e.g. // WALLET */
+  .eyebrow {
+    @apply font-mono text-[11px] font-bold uppercase text-ink/55;
+    letter-spacing: 0.18em;
+  }
+
+  /* Acid highlighter marker behind key words — always dark text on acid */
+  .mark {
+    @apply bg-acid text-night;
+    padding: 0.05em 0.28em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* Rotated ink stamp for statuses */
+  .stamp {
+    @apply inline-flex items-center gap-1 border-[2.5px] font-mono text-[10px] font-bold uppercase px-2 py-0.5;
+    letter-spacing: 0.12em;
+    transform: rotate(-5deg);
+  }
+
+  /* Perforated top edge for betting-slip cards */
+  .perf-top {
+    background-image: radial-gradient(circle at 6px -2px, transparent 5px, currentColor 5px);
+    background-size: 14px 8px;
+    background-repeat: repeat-x;
+    height: 8px;
+  }
+
+  /* Bordered surfaces */
+  .panel {
+    @apply border-2 border-ink bg-card;
+  }
+  .tile {
+    @apply border-2 border-ink bg-card p-4;
+  }
+
+  /* Inputs */
+  .inp {
+    @apply w-full border-2 border-ink bg-paper/50 px-3.5 h-12 font-mono text-sm text-ink;
+    @apply placeholder:text-ink/35 focus:outline-none focus:bg-acid/15;
+  }
+
+  /* Buttons — brutalist hard-shadow press */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 h-12 px-5 border-2 border-ink;
+    @apply font-mono font-bold uppercase text-[13px] transition-all;
+    @apply disabled:opacity-40 disabled:pointer-events-none;
+    letter-spacing: 0.1em;
+  }
+  .btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 0 rgb(var(--ink-rgb));
+  }
+  .btn:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
+  .btn-ink   { @apply bg-ink text-paper hover:bg-acid hover:text-night; }
+  .btn-acid  { @apply bg-acid text-night; }
+  .btn-line  { @apply bg-transparent text-ink hover:bg-ink hover:text-paper; }
+  .btn-flag  { @apply bg-flag text-cream; }
 }

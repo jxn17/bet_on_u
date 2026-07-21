@@ -10,4 +10,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    host: true, // bind all interfaces (IPv4 + IPv6) so 127.0.0.1 works too
+    port: 5173,
+  },
 })
