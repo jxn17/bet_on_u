@@ -171,6 +171,10 @@ const auth = {
   },
 };
 
+const profile = {
+  updateName: (name) => rpc('update_profile', { p_name: name }).then(withDate),
+};
+
 const wallet = {
   async get() {
     if (!supabase) return { balance: 0, locked: 0 };
@@ -225,5 +229,5 @@ const integrations = {
   },
 };
 
-export const db = { auth, entities, wallet, rooms, goals, checkins, integrations, supabase, isConfigured };
+export const db = { auth, entities, profile, wallet, rooms, goals, checkins, integrations, supabase, isConfigured };
 export default db;
