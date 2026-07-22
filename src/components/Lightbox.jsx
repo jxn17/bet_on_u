@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
-// Full-screen image viewer. Tap the backdrop, the X, or press Esc to close.
+// Full-screen media viewer (image or video). Tap the backdrop, the X, or Esc to close.
 export default function Lightbox({ src, alt = "", onClose }) {
+  const isVideo = /\.(mp4|mov|m4v|webm|ogg)(\?|$)/i.test(src || "");
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
@@ -28,12 +29,23 @@ export default function Lightbox({ src, alt = "", onClose }) {
       >
         <X className="h-5 w-5" />
       </button>
-      <img
-        src={src}
-        alt={alt}
-        onClick={(e) => e.stopPropagation()}
-        className="max-h-[88vh] max-w-full border-2 border-cream object-contain"
-      />
+      {isVideo ? (
+        <video
+          src={src}
+          controls
+          autoPlay
+          playsInline
+          onClick={(e) => e.stopPropagation()}
+          className="max-h-[88vh] max-w-full border-2 border-cream bg-night"
+        />
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          onClick={(e) => e.stopPropagation()}
+          className="max-h-[88vh] max-w-full border-2 border-cream object-contain"
+        />
+      )}
     </div>,
     document.body
   );

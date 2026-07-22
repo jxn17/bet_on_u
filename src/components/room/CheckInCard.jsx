@@ -25,6 +25,7 @@ export default function CheckInCard({ checkIn, currentUserId, roomMembers, onVot
   const isOwn = checkIn.user_id === currentUserId;
   const rejectReasons = currentVotes.filter(v => v.vote === "reject" && v.reason);
   const canAppeal = isOwn && checkIn.status === "rejected" && !checkIn.appealed;
+  const isVideo = /\.(mp4|mov|m4v|webm|ogg)(\?|$)/i.test(checkIn.proof_image_url || "");
 
   const submitVote = async (vote, voteReason) => {
     setVoting(true);
@@ -93,17 +94,31 @@ export default function CheckInCard({ checkIn, currentUserId, roomMembers, onVot
       </div>
 
       {checkIn.proof_image_url && (
-        <button
-          type="button"
-          onClick={() => setZoom(true)}
-          className="group relative mx-3.5 mb-3 block w-[calc(100%-1.75rem)] border-2 border-ink"
-          aria-label="View proof full screen"
-        >
-          <img src={checkIn.proof_image_url} alt="Check-in proof" className="h-48 w-full object-cover" />
-          <span className="absolute bottom-1.5 right-1.5 grid h-7 w-7 place-items-center border-2 border-cream bg-night/80 text-cream transition-colors group-hover:bg-acid group-hover:text-night">
-            <Maximize2 className="h-3.5 w-3.5" />
-          </span>
-        </button>
+        isVideo ? (
+          <div className="relative mx-3.5 mb-3 border-2 border-ink">
+            <video src={checkIn.proof_image_url} controls playsInline className="h-48 w-full bg-night object-contain" />
+            <button
+              type="button"
+              onClick={() => setZoom(true)}
+              aria-label="View full screen"
+              className="absolute right-1.5 top-1.5 z-10 grid h-7 w-7 place-items-center border-2 border-cream bg-night/80 text-cream transition-colors hover:bg-acid hover:text-night"
+            >
+              <Maximize2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setZoom(true)}
+            className="group relative mx-3.5 mb-3 block w-[calc(100%-1.75rem)] border-2 border-ink"
+            aria-label="View proof full screen"
+          >
+            <img src={checkIn.proof_image_url} alt="Check-in proof" className="h-48 w-full object-cover" />
+            <span className="absolute bottom-1.5 right-1.5 grid h-7 w-7 place-items-center border-2 border-cream bg-night/80 text-cream transition-colors group-hover:bg-acid group-hover:text-night">
+              <Maximize2 className="h-3.5 w-3.5" />
+            </span>
+          </button>
+        )
       )}
       {zoom && checkIn.proof_image_url && (
         <Lightbox src={checkIn.proof_image_url} alt="Check-in proof" onClose={() => setZoom(false)} />
