@@ -1,9 +1,10 @@
 import db from '@/api/db';
 
 import React, { useState, useEffect } from "react";
-import { Clock, CheckCircle, XCircle, Loader2, Gavel } from "lucide-react";
+import { Clock, CheckCircle, XCircle, Loader2, Gavel, Maximize2 } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
+import Lightbox from "@/components/Lightbox";
 
 export default function CheckInCard({ checkIn, currentUserId, roomMembers, onVoted }) {
   const [voting, setVoting] = useState(false);
@@ -11,6 +12,7 @@ export default function CheckInCard({ checkIn, currentUserId, roomMembers, onVot
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState("");
   const [votes, setVotes] = useState([]);
+  const [zoom, setZoom] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -91,9 +93,20 @@ export default function CheckInCard({ checkIn, currentUserId, roomMembers, onVot
       </div>
 
       {checkIn.proof_image_url && (
-        <div className="mx-3.5 mb-3 border-2 border-ink">
-          <img src={checkIn.proof_image_url} alt="Proof" className="h-48 w-full object-cover" />
-        </div>
+        <button
+          type="button"
+          onClick={() => setZoom(true)}
+          className="group relative mx-3.5 mb-3 block w-[calc(100%-1.75rem)] border-2 border-ink"
+          aria-label="View proof full screen"
+        >
+          <img src={checkIn.proof_image_url} alt="Check-in proof" className="h-48 w-full object-cover" />
+          <span className="absolute bottom-1.5 right-1.5 grid h-7 w-7 place-items-center border-2 border-cream bg-night/80 text-cream transition-colors group-hover:bg-acid group-hover:text-night">
+            <Maximize2 className="h-3.5 w-3.5" />
+          </span>
+        </button>
+      )}
+      {zoom && checkIn.proof_image_url && (
+        <Lightbox src={checkIn.proof_image_url} alt="Check-in proof" onClose={() => setZoom(false)} />
       )}
 
       {checkIn.note && (

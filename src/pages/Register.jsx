@@ -11,6 +11,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [name, setName] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,7 +22,7 @@ export default function Register() {
     setLoading(true);
     setError("");
     try {
-      const data = await db.auth.register({ email, password });
+      const data = await db.auth.register({ email, password, full_name: name.trim() || undefined });
       if (data?.session) {
         window.location.href = "/";
         return;
@@ -77,6 +78,10 @@ export default function Register() {
                 {error && (
                   <p className="border-2 border-flag bg-flag/10 px-3 py-2 font-mono text-xs text-flag">{error}</p>
                 )}
+                <div>
+                  <label className="eyebrow">// display name</label>
+                  <input value={name} onChange={e => setName(e.target.value)} className="inp mt-1.5" placeholder="what your crew calls you" maxLength={40} required />
+                </div>
                 <div>
                   <label className="eyebrow">// email</label>
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="inp mt-1.5" placeholder="you@email.com" required />

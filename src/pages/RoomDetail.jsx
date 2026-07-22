@@ -294,15 +294,22 @@ export default function RoomDetail() {
             <div className="border-2 border-dashed border-ink/40 py-8 text-center font-mono text-sm text-ink/50">No payouts yet. They land when a season is settled.</div>
           ) : (
             <div className="space-y-2">
-              {payouts.map(p => (
-                <div key={p.id} className="flex items-center justify-between border-2 border-ink bg-card p-3">
-                  <div>
-                    <p className="font-mono text-sm font-bold">{p.amount} 🪙 → {p.to_user_name}</p>
-                    <p className="font-mono text-[11px] text-ink/55">{p.reason}</p>
+              {payouts.map(p => {
+                const lost = p.kind === "forfeit";
+                return (
+                  <div key={p.id} className="flex items-center justify-between border-2 border-ink bg-card p-3">
+                    <div className="min-w-0">
+                      <p className="font-mono text-sm font-bold">
+                        {lost ? "−" : "+"}{p.amount} 🪙 {lost ? "·" : "→"} {p.to_user_name}
+                      </p>
+                      <p className="truncate font-mono text-[11px] text-ink/55">{p.reason}</p>
+                    </div>
+                    <span className={`stamp shrink-0 ${lost ? "border-flag text-flag" : "border-ink bg-acid text-night"}`}>
+                      {lost ? "lost" : "won"}
+                    </span>
                   </div>
-                  <span className="stamp border-ink bg-acid text-night">won</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </TabsContent>
