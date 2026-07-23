@@ -123,7 +123,10 @@ const auth = {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: full_name ? { full_name } : undefined },
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: full_name ? { full_name } : undefined,
+      },
     });
     if (error) throw new Error(error.message);
     return data;

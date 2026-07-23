@@ -2,8 +2,7 @@ import db from '@/api/db';
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, ArrowRight } from "lucide-react";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Loader2, ArrowRight, MailCheck } from "lucide-react";
 
 export default function Register() {
   const [step, setStep] = useState("register");
@@ -11,7 +10,6 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [name, setName] = useState("");
-  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,23 +24,9 @@ export default function Register() {
         window.location.href = "/";
         return;
       }
-      setStep("otp");
+      setStep("sent");
     } catch (err) {
       setError(err.message || "Registration failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerify = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const { access_token } = await db.auth.verifyOtp({ email, otpCode: otp });
-      db.auth.setToken(access_token);
-      window.location.href = "/";
-    } catch (err) {
-      setError(err.message || "Invalid code");
     } finally {
       setLoading(false);
     }
@@ -105,28 +89,23 @@ export default function Register() {
             </>
           ) : (
             <>
-              <p className="eyebrow mb-3">// verify · code sent to {email}</p>
+              <p className="eyebrow mb-3">// almost in</p>
               <h1 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight">
                 check your <span className="mark">inbox.</span>
               </h1>
 
               <div className="mt-9 space-y-5">
-                {error && (
-                  <p className="border-2 border-flag bg-flag/10 px-3 py-2 font-mono text-xs text-flag">{error}</p>
-                )}
-                <div className="flex justify-center">
-                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                    <InputOTPGroup>
-                      {[0,1,2,3,4,5].map(i => <InputOTPSlot key={i} index={i} className="h-12 w-11 border-2 border-ink font-mono text-lg" />)}
-                    </InputOTPGroup>
-                  </InputOTP>
+                <div className="flex items-start gap-3 border-2 border-ink bg-card p-4">
+                  <MailCheck className="mt-0.5 h-5 w-5 shrink-0 text-acid-deep" />
+                  <p className="font-mono text-xs leading-relaxed text-ink/80">
+                    We sent a confirmation link to <span className="font-bold text-ink">{email}</span>. Click it to activate your account, then come back and sign in.
+                  </p>
                 </div>
-                <button onClick={handleVerify} disabled={loading || otp.length < 6} className="btn btn-ink w-full">
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
-                  Verify
-                </button>
+                <Link to="/login" className="btn btn-ink w-full">
+                  <ArrowRight className="h-4 w-4" /> Go to sign in
+                </Link>
                 <button onClick={handleResend} className="w-full text-center font-mono text-xs text-ink/60 underline decoration-2 underline-offset-4 hover:text-ink">
-                  Resend code
+                  Didn't get it? Resend email
                 </button>
               </div>
             </>
