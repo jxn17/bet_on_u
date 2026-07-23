@@ -3,7 +3,6 @@ import db from '@/api/db';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, ArrowRight } from "lucide-react";
-import GoogleIcon from "@/components/GoogleIcon";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -76,17 +75,6 @@ export default function Login() {
               Sign In
             </button>
           </form>
-
-          <div className="my-6 flex items-center gap-3">
-            <div className="h-0.5 flex-1 bg-ink/15" />
-            <span className="eyebrow">// or</span>
-            <div className="h-0.5 flex-1 bg-ink/15" />
-          </div>
-
-          <button onClick={() => db.auth.loginWithProvider("google", "/")} className="btn btn-line w-full">
-            <GoogleIcon className="h-4 w-4" />
-            Continue with Google
-          </button>
 
           <div className="mt-8 flex items-center justify-between font-mono text-xs text-ink/60">
             <Link to="/forgot-password" className="underline decoration-2 underline-offset-4 hover:text-ink">

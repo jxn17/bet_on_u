@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, ArrowRight } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import GoogleIcon from "@/components/GoogleIcon";
 
 export default function Register() {
   const [step, setStep] = useState("register");
@@ -99,16 +98,6 @@ export default function Register() {
                   Create Account
                 </button>
               </form>
-
-              <div className="my-6 flex items-center gap-3">
-                <div className="h-0.5 flex-1 bg-ink/15" />
-                <span className="eyebrow">// or</span>
-                <div className="h-0.5 flex-1 bg-ink/15" />
-              </div>
-
-              <button type="button" onClick={() => db.auth.loginWithProvider("google", "/")} className="btn btn-line w-full">
-                <GoogleIcon className="h-4 w-4" /> Continue with Google
-              </button>
 
               <p className="mt-8 text-center font-mono text-xs text-ink/60">
                 Already playing? <Link to="/login" className="font-bold text-ink hover:text-acid-deep">Sign in →</Link>
