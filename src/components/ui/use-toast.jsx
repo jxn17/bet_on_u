@@ -134,6 +134,13 @@ function toast({ ...props }) {
     },
   });
 
+  // Guarantee auto-dismiss even if Radix's own timer is paused (pointer over
+  // the viewport, window blurred, tab hidden). Pass duration: Infinity to opt out.
+  const duration = typeof props.duration === "number" ? props.duration : 3500;
+  if (duration !== Infinity) {
+    setTimeout(dismiss, duration);
+  }
+
   return {
     id,
     dismiss,
