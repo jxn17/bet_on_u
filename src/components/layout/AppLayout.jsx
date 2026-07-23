@@ -28,9 +28,9 @@ export default function AppLayout() {
         <div className="mx-auto flex h-16 max-w-2xl items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2.5">
             <div className="grid h-8 w-8 place-items-center bg-acid">
-              <span className="font-mono text-sm font-bold text-night">BI</span>
+              <span className="font-mono text-sm font-bold text-night">BU</span>
             </div>
-            <span className="font-display text-lg font-black uppercase tracking-tight">Bet It</span>
+            <span className="font-display text-lg font-black uppercase tracking-tight">Bet on U</span>
           </Link>
 
           <nav className="hidden items-center gap-1 sm:flex">

@@ -2,7 +2,7 @@
 
 ## Project context
 
-Bet It is a React + Vite + Tailwind single-page app backed by **Supabase**
+Bet on U is a React + Vite + Tailwind single-page app backed by **Supabase**
 (Postgres + Auth + Storage). It's a **virtual-money** accountability game for
 friend groups — no real money is ever involved. See `README.md` for setup, the
 game rules, and deploy steps.

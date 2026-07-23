@@ -1,4 +1,4 @@
-# Bet It
+# Bet on U
 
 A **virtual-money** accountability game for friend groups. Create a room (a
 "season"), stake coins on your goals, check in with photo proof, and let the

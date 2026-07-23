@@ -41,9 +41,9 @@ export default function Register() {
       <header className="flex items-center justify-between border-b-2 border-ink px-5 py-3">
         <div className="flex items-center gap-2.5">
           <div className="grid h-8 w-8 place-items-center bg-acid">
-            <span className="font-mono text-sm font-bold text-night">BI</span>
+            <span className="font-mono text-sm font-bold text-night">BU</span>
           </div>
-          <span className="font-display text-lg font-black uppercase tracking-tight">Bet It</span>
+          <span className="font-display text-lg font-black uppercase tracking-tight">Bet on U</span>
         </div>
         <span className="eyebrow hidden sm:block">// 1000 free coins</span>
       </header>
