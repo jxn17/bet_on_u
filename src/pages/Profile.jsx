@@ -1,7 +1,7 @@
 import db from '@/api/db';
 
 import React, { useState, useEffect } from "react";
-import { Loader2, Pencil, Check, X } from "lucide-react";
+import { Loader2, Pencil, Check, X, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function Profile() {
@@ -13,6 +13,8 @@ export default function Profile() {
   const [editing, setEditing] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -45,6 +47,17 @@ export default function Profile() {
       toast({ title: "Couldn't save name", description: e.message, variant: "destructive" });
     } finally {
       setSavingName(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await db.auth.deleteAccount();
+      window.location.href = "/";
+    } catch (e) {
+      toast({ title: "Couldn't delete account", description: e.message, variant: "destructive" });
+      setDeleting(false);
     }
   };
 
@@ -155,6 +168,41 @@ export default function Profile() {
                 </div>
               );
             })}
+          </div>
+        )}
+      </div>
+
+      {/* Danger zone */}
+      <div className="border-2 border-flag p-4">
+        <p className="eyebrow text-flag">// danger zone</p>
+        {!confirmDelete ? (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="mt-3 flex h-11 items-center gap-2 border-2 border-flag px-4 font-mono text-xs font-bold uppercase tracking-wider text-flag transition-colors hover:bg-flag hover:text-cream"
+          >
+            <Trash2 className="h-4 w-4" /> Delete account
+          </button>
+        ) : (
+          <div className="mt-3 space-y-3">
+            <p className="font-mono text-xs text-ink/70">
+              Permanently deletes your account, wallet, bet history, and any rooms you created. Can't be undone.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex h-11 items-center gap-2 border-2 border-flag bg-flag px-4 font-mono text-xs font-bold uppercase tracking-wider text-cream disabled:opacity-50"
+              >
+                {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                Yes, delete everything
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="h-11 border-2 border-ink px-4 font-mono text-xs font-bold uppercase tracking-wider"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
       </div>

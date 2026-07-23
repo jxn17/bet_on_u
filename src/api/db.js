@@ -166,6 +166,13 @@ const auth = {
     if (redirectUrl) window.location.href = redirectUrl;
   },
 
+  async deleteAccount() {
+    requireConfig();
+    const { error } = await supabase.rpc('delete_account');
+    if (error) throw new Error(error.message);
+    await supabase.auth.signOut().catch(() => {});
+  },
+
   redirectToLogin() {
     window.location.href = '/login';
   },
